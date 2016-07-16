@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MVCAuthorization.Models
+namespace MVCAuthorization.Models.DataAccessLevel
 {
     using System;
     using System.Data.Entity;

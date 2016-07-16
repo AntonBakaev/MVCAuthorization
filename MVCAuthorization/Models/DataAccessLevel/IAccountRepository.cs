@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MVCAuthorization.Models
+namespace MVCAuthorization.Models.DataAccessLevel
 {
 	public interface IAccountRepository
 	{
