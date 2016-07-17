@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using MVCAuthorization.Models.DataAccessLevel;
 
 namespace MVCAuthorization.Models
 {
