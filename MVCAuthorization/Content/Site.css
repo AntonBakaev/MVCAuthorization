@@ -28,15 +28,22 @@ input {
 }
 
 .input-text {
-	margin-left: 60px;
+    margin-left: 60px;
 }
 
 .div-checkbox {
-	margin-left: 174px;
+    margin-left: 174px;
 }
 
 .countries-list {
-	margin-left: 20px;
+    margin-left: 20px;
+}
+
+.disabled-link {
+    text-align: right;
+    cursor: default;
+    color: #777777;
+    pointer-events: none;
 }
 
 /* Set styles for fields that have NOT passed the validation */

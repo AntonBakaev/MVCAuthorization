@@ -4,9 +4,14 @@ using MVCAuthorization.Models;
 
 namespace MVCAuthorization.Utils
 {
-	public static class CookieSaver
+	public static class CookieManager
 	{
-		private static void DeleteCookie(HttpContextBase httpContext, string cookieName)
+        public static bool IsUserLoggedIn(this System.Web.Mvc.HtmlHelper html, HttpRequestBase httpRequest, string username)
+        {
+            return httpRequest.Cookies[username] != null;
+        }
+
+		public static void DeleteCookie(HttpContextBase httpContext, string cookieName)
 		{
 			var cookie = new HttpCookie(cookieName);
 			cookie.Expires = DateTime.Now.Date.AddDays(-1);
@@ -35,5 +40,10 @@ namespace MVCAuthorization.Utils
 			password = PasswordProtector.Unprotect(username, passwordCookie.Value);
 			return true;
 		}
+
+        public static void SaveLoginCookie(HttpContextBase httpContext, string username)
+        {
+            httpContext.Response.Cookies.Add(new HttpCookie(username));
+        }
 	}
 }
