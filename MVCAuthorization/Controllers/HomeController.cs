@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Microsoft.Ajax.Utilities;
 using MVCAuthorization.Models;
 using MVCAuthorization.Utils;
 
@@ -8,15 +9,20 @@ namespace MVCAuthorization.Controllers
 {
 	public class HomeController : Controller
 	{
+		#region Private fields
 		private readonly IAccountManager accountManager;
 		private readonly ICountryManager countryManager;
+		#endregion
 
+		#region Constructors
 		public HomeController(IAccountManager accountManager, ICountryManager countryManager)
 		{
 			this.accountManager = accountManager;
 			this.countryManager = countryManager;
 		}
+		#endregion
 
+		#region Private methods
 		private IEnumerable<SelectListItem> GetCountryNames()
 		{
 			IEnumerable<SelectListItem> names = countryManager.GetCountries()
@@ -38,7 +44,9 @@ namespace MVCAuthorization.Controllers
 											CountryId = countryId
 										});
 		}
+		#endregion
 
+		#region First page (RegForm)
 		[HttpGet]
 		public ActionResult Index()
 		{
@@ -46,22 +54,28 @@ namespace MVCAuthorization.Controllers
 		}
 
 		[HttpGet]
-		public ActionResult RegForm()
+		public ActionResult RegForm(bool? cookies)
 		{
+			if (cookies != true)
+				return View();
+			string username;
+			string password;
+			if (CookieSaver.TryReadAccountMainDataCookies(this.HttpContext, out username, out password))
+				return View(new AccountMainViewModel() { Username = username, Password = password });
 			return View();
 		}
 
 		[HttpPost]
 		public ActionResult RegForm(AccountMainViewModel accountMainData)
 		{
-			if (ModelState.IsValid)
-			{
-				CookieSaver.SaveAccountMainDataCookies(this.HttpContext, accountMainData);
-				return RedirectToAction("RegFormAdditional");
-			}
-			return View();
+			if (!ModelState.IsValid)
+				return View();
+			CookieSaver.SaveAccountMainDataCookies(this.HttpContext, accountMainData);
+			return RedirectToAction("RegFormAdditional");
 		}
+		#endregion
 
+		#region Second page (RegFormAdditional)
 		[HttpGet]
 		public ActionResult RegFormAdditional()
 		{
@@ -69,24 +83,27 @@ namespace MVCAuthorization.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult RegFormAdditional(AccountAdditionalViewModel accountMainData)
+		public ActionResult RegFormAdditional(AccountAdditionalViewModel accountMainData, string back)
 		{
-			if (ModelState.IsValid)
-			{
-				string username;
-				string password;
-				if (!CookieSaver.TryReadAccountMainDataCookies(this.HttpContext, out username, out password))
-					return RedirectToAction("RegForm");
-				AddAccount(username, password, accountMainData.Sex, accountMainData.SelectedCountryId);
-				return RedirectToAction("UserLogin");
-			}
-			return View(new AccountAdditionalViewModel() { CountryNames = GetCountryNames() });
+			if (!back.IsNullOrWhiteSpace())
+				return RedirectToAction("RegForm", new { cookies = true });
+			if (!ModelState.IsValid)
+				return View(new AccountAdditionalViewModel() { CountryNames = GetCountryNames() });
+			string username;
+			string password;
+			if (!CookieSaver.TryReadAccountMainDataCookies(this.HttpContext, out username, out password))
+				return RedirectToAction("RegForm");
+			AddAccount(username, password, accountMainData.Sex, accountMainData.SelectedCountryId);
+			return RedirectToAction("UserLogin");
 		}
+		#endregion
 
+		#region Third page (UserLogin)
 		[HttpGet]
 		public ActionResult UserLogin()
 		{
 			return View();
 		}
+		#endregion
 	}
 }
