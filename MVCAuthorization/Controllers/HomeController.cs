@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Security;
 using Microsoft.Ajax.Utilities;
 using MVCAuthorization.Models;
 using MVCAuthorization.Utils;
@@ -34,9 +35,9 @@ namespace MVCAuthorization.Controllers
 			return new SelectList(names, "Value", "Text");
 		}
 
-		private void AddAccount(string username, string password, string sex, int countryId)
+		private int AddAccount(string username, string password, string sex, int countryId)
 		{
-			accountManager.AddAccount(new Account()
+			return accountManager.AddAccount(new Account()
 										{
 											Username = username,
 											Password = SHA1Encoder.Encode(password),
@@ -93,16 +94,31 @@ namespace MVCAuthorization.Controllers
 			string password;
 			if (!CookieSaver.TryReadAccountMainDataCookies(this.HttpContext, out username, out password))
 				return RedirectToAction("RegForm");
-			AddAccount(username, password, accountMainData.Sex, accountMainData.SelectedCountryId);
-			return RedirectToAction("UserLogin");
+			int accountId = AddAccount(username, password, accountMainData.Sex, accountMainData.SelectedCountryId);
+			return RedirectToAction("AccountLogin", new { accountId = accountId });
 		}
 		#endregion
 
-		#region Third page (UserLogin)
+		#region Third page (AccountLogin)
+
 		[HttpGet]
-		public ActionResult UserLogin()
+		public ActionResult AccountLogin(int accountId)
 		{
-			return View();
+			if (!Request.IsAuthenticated)
+				return RedirectToAction("RegForm");
+			var account = accountManager.GetAccount(accountId);
+			if (account == null)
+				return RedirectToAction("RegForm");
+			FormsAuthentication.SetAuthCookie(account.Username, false);
+			return View(account.Username);
+		}
+
+		[HttpGet]
+		[ChildActionOnly]
+		public ActionResult AccountLogout()
+		{
+			FormsAuthentication.SignOut();
+			return RedirectToAction("RegForm");
 		}
 		#endregion
 	}

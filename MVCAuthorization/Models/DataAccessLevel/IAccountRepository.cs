@@ -6,7 +6,7 @@ namespace MVCAuthorization.Models.DataAccessLevel
 	{
 		IEnumerable<Account> GetAccounts();
 		Account GetAccountById(int accountId);
-		void InsertAccount(Account account);
+		int InsertAccount(Account account);
 		void UpdateAccount(Account account);
 		void DeleteAccount(int accountId);
 	}

@@ -1,7 +1,6 @@
 ﻿@model MVCAuthorization.Models.AccountAdditionalViewModel
 @{
 	ViewBag.Title = "Registration form";
-
 }
 
 <div>
@@ -19,10 +18,10 @@
 				</div>
 				<div class="div-checkbox">
 					@Html.HiddenFor(a => a.Sex)
-					@Html.CheckBox("Male", false, new { @class = "sex-checkbox", @type = "checkbox", data_groupid = "1", data_multichoise = "0", data_id = "Male" })
+					@Html.CheckBox("Male", false, new { @class = "sex-checkbox", data_groupid = "1", data_multichoise = "0", data_id = "Male" })
 					Male
 					<br />
-					@Html.CheckBox("Female", false, new { @class = "sex-checkbox", @type = "checkbox", data_groupid = "1", data_multichoise = "0", data_id = "Female" })
+					@Html.CheckBox("Female", false, new { @class = "sex-checkbox", data_groupid = "1", data_multichoise = "0", data_id = "Female" })
 					Female
 					<br />
 					@Html.ValidationMessageFor(a => a.Sex)
@@ -52,6 +51,6 @@
 			}
 		}
 		else
-			$('input[id=Sex').val(null);
+			$('input[id=Sex]').val(null);
 	});
 </script>
