@@ -1,28 +1,28 @@
 ﻿@model MVCAuthorization.Models.AccountMainViewModel
 @{
-    ViewBag.Title = "Registration form";
+	ViewBag.Title = "Registration form";
 }
 
 <div>
-    <div style="text-align: right; margin: 20px; float: right">
-        <p>Please create a new account</p>
-    </div>
-    <div>
-        <h2>Welcome!</h2>
-        <h3>Register your account:</h3>
-        @using (@Html.BeginForm())
-        {
-            <fieldset>
-                @Html.Label("Enter username:")
-                @Html.TextBoxFor(a => a.Username)
-                @Html.ValidationMessageFor(a => a.Username)
-                <br />
-                @Html.Label("Enter password:")
-                @Html.PasswordFor(a => a.Password)
-                @Html.ValidationMessageFor(a => a.Password)
-                <br />
-                <input type="submit" value="Next" />
-            </fieldset>
-        }
-    </div>
+	<div style="text-align: right; margin: 20px; float: right">
+		<p>Please create a new account</p>
+	</div>
+	<div>
+		<h2>Welcome!</h2>
+		<h3>Register your account:</h3>
+		@using (Html.BeginForm())
+		{
+			<fieldset>
+				@Html.Label("Enter username:")
+				@Html.TextBoxFor(a => a.Username, new { @class = "input-text" })
+				@Html.ValidationMessageFor(a => a.Username)
+				<br />
+				@Html.Label("Enter password:")
+				@Html.PasswordFor(a => a.Password, new { @class = "input-text" })
+				@Html.ValidationMessageFor(a => a.Password)
+				<br />
+				<input id="next" name="next" type="submit" value="Next" />
+			</fieldset>
+		}
+	</div>
 </div>

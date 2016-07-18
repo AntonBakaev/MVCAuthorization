@@ -23,12 +23,20 @@ textarea {
     max-width: 280px;
 }
 
-label {
-    margin-right: 60px;
-}
-
 input {
     margin-top: 12px;
+}
+
+.input-text {
+	margin-left: 60px;
+}
+
+.div-checkbox {
+	margin-left: 174px;
+}
+
+.countries-list {
+	margin-left: 20px;
 }
 
 /* Set styles for fields that have NOT passed the validation */

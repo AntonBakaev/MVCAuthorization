@@ -31,7 +31,8 @@ namespace MVCAuthorization.Models.DataAccessLevel
             accountToUpdate.Username = account.Username;
             accountToUpdate.Password = account.Password;
             accountToUpdate.Sex = account.Sex;
-            accountToUpdate.Country = account.Country;
+            accountToUpdate.CountryId = account.CountryId;
+	        accountToUpdate.Country = account.Country;
 
             accountDB.Entry(accountToUpdate).State = EntityState.Modified;
             accountDB.SaveChanges();

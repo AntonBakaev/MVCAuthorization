@@ -29,6 +29,8 @@ namespace MVCAuthorization.DependencyResolution
         {
             For<IAccountRepository>().Use<AccountRepository>();
             For<IAccountManager>().Use<AccountManager>();
+	        For<ICountryRepository>().Use<CountryRepository>();
+	        For<ICountryManager>().Use<CountryManager>();
         }
 
         #endregion

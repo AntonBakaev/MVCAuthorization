@@ -1,50 +1,92 @@
-﻿using System.Web;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using MVCAuthorization.Models;
 using MVCAuthorization.Utils;
 
 namespace MVCAuthorization.Controllers
 {
-    public class HomeController : Controller
-    {
-        private void SaveAccountMainDataCookies(AccountMainViewModel accountMainData)
-        {
-            accountMainData.Password = PasswordProtector.Protect(accountMainData.Username, accountMainData.Password);
-            this.HttpContext.Response.Cookies
-                    .Add(new HttpCookie("Username", accountMainData.Username));
-            this.HttpContext.Response.Cookies
-                .Add(new HttpCookie("Password", accountMainData.Password));
-        }
+	public class HomeController : Controller
+	{
+		private readonly IAccountManager accountManager;
+		private readonly ICountryManager countryManager;
 
-        [HttpGet]
-        public ActionResult Index()
-        {
-            return RedirectToAction("RegForm");
-        }
+		public HomeController(IAccountManager accountManager, ICountryManager countryManager)
+		{
+			this.accountManager = accountManager;
+			this.countryManager = countryManager;
+		}
 
-        [HttpGet]
-        public ActionResult RegForm()
-        {
-            return View();
-        }
+		private IEnumerable<SelectListItem> GetCountryNames()
+		{
+			IEnumerable<SelectListItem> names = countryManager.GetCountries()
+															  .Select(c => new SelectListItem()
+																	{
+																		Value = c.Id.ToString(),
+																		Text = c.Name
+																	});
+			return new SelectList(names, "Value", "Text");
+		}
 
-        [HttpPost]
-        public ActionResult RegForm(AccountMainViewModel accountMainData)
-        {
-            if (ModelState.IsValid)
-            {
-                SaveAccountMainDataCookies(accountMainData);
-                return RedirectToAction("RegFormAdditional");
-            }
-            else
-                return View();
-        }
+		private void AddAccount(string username, string password, string sex, int countryId)
+		{
+			accountManager.AddAccount(new Account()
+										{
+											Username = username,
+											Password = SHA1Encoder.Encode(password),
+											Sex = sex,
+											CountryId = countryId
+										});
+		}
 
-        [HttpGet]
-        public ActionResult RegFormAdditional()
-        {
-            return View();
-            //TODO: remove cookies
-        }
-    }
+		[HttpGet]
+		public ActionResult Index()
+		{
+			return RedirectToAction("RegForm");
+		}
+
+		[HttpGet]
+		public ActionResult RegForm()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		public ActionResult RegForm(AccountMainViewModel accountMainData)
+		{
+			if (ModelState.IsValid)
+			{
+				CookieSaver.SaveAccountMainDataCookies(this.HttpContext, accountMainData);
+				return RedirectToAction("RegFormAdditional");
+			}
+			return View();
+		}
+
+		[HttpGet]
+		public ActionResult RegFormAdditional()
+		{
+			return View(new AccountAdditionalViewModel() { CountryNames = GetCountryNames() });
+		}
+
+		[HttpPost]
+		public ActionResult RegFormAdditional(AccountAdditionalViewModel accountMainData)
+		{
+			if (ModelState.IsValid)
+			{
+				string username;
+				string password;
+				if (!CookieSaver.TryReadAccountMainDataCookies(this.HttpContext, out username, out password))
+					return RedirectToAction("RegForm");
+				AddAccount(username, password, accountMainData.Sex, accountMainData.SelectedCountryId);
+				return RedirectToAction("UserLogin");
+			}
+			return View(new AccountAdditionalViewModel() { CountryNames = GetCountryNames() });
+		}
+
+		[HttpGet]
+		public ActionResult UserLogin()
+		{
+			return View();
+		}
+	}
 }
