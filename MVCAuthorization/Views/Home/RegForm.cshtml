@@ -4,20 +4,18 @@
 }
 
 <div>
-	<div>
-		@using (Html.BeginForm())
-		{
-			<fieldset>
-				@Html.Label("Enter username:")
-				@Html.TextBoxFor(a => a.Username, new { @class = "input-text" })
-				@Html.ValidationMessageFor(a => a.Username)
-				<br />
-				@Html.Label("Enter password:")
-				@Html.PasswordFor(a => a.Password, new { @class = "input-text" })
-				@Html.ValidationMessageFor(a => a.Password)
-				<br />
-				<input id="next" name="next" type="submit" value="Next" />
-			</fieldset>
-		}
-	</div>
+	@using (Html.BeginForm())
+	{
+		<fieldset>
+			@Html.Label("Enter username:")
+			@Html.TextBoxFor(a => a.Username, new { @class = "input-text" })
+			@Html.ValidationMessageFor(a => a.Username)
+			<br />
+			@Html.Label("Enter password:")
+			@Html.PasswordFor(a => a.Password, new { @class = "input-text" })
+			@Html.ValidationMessageFor(a => a.Password)
+			<br />
+			<input id="next" name="next" type="submit" value="Next" />
+		</fieldset>
+	}
 </div>
