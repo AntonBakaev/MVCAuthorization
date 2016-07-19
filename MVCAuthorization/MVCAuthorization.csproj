@@ -191,6 +191,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Utils\PasswordProtector.cs" />
     <Compile Include="ViewModels\AccountAdditionalViewModel.cs" />
     <Compile Include="ViewModels\AccountMainViewModel.cs" />
     <Compile Include="Models\AccountManager.cs" />
@@ -220,7 +221,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\CookieManager.cs" />
-    <Compile Include="Utils\PasswordProtector.cs" />
     <Compile Include="Utils\SHA1Encoder.cs" />
     <Compile Include="ViewModels\CabinetViewModel.cs" />
   </ItemGroup>
@@ -293,9 +293,7 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Cabinet\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

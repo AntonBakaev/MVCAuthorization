@@ -7,49 +7,50 @@ using MVCAuthorization.ViewModels;
 
 namespace MVCAuthorization.Controllers
 {
-	public class AccountController : Controller
-	{
-		#region Private fields
-		private ICountryManager countryManager;
-		private IAccountManager accountManager;
-		#endregion
+    public class AccountController : Controller
+    {
+        #region Private fields
+        private ICountryManager countryManager;
+        private IAccountManager accountManager;
+        #endregion
 
-		#region Constructors
-		public AccountController(ICountryManager countryManager, IAccountManager accountManager)
-		{
-			this.countryManager = countryManager;
-			this.accountManager = accountManager;
-		}
-		#endregion
+        #region Constructors
+        public AccountController(ICountryManager countryManager, IAccountManager accountManager)
+        {
+            this.countryManager = countryManager;
+            this.accountManager = accountManager;
+        }
+        #endregion
 
-		#region Action methods
-		[HttpGet]
-		public ActionResult AccountLogin(int accountId)
-		{
-			int currentUserId;
-			if (CookieManager.IsUserLoggedIn(Request)
-				&& (currentUserId = CookieManager.GetLoggedUserId(Request)) != accountId)
-			{
-				return RedirectToAction("AccountLogin", new { accountId = currentUserId });
-			}
+        #region Action methods
+        [HttpGet]
+        public ActionResult AccountLogin(int id)
+        {
+            int currentUserId;
+            if (CookieManager.IsUserLoggedIn(Request)
+                && (currentUserId = CookieManager.GetLoggedUserId(Request)) != id)
+            {
+                return RedirectToAction("AccountLogin", new { id = currentUserId });
+            }
 
-			var account = accountManager.GetAccount(accountId);
-			if (account == null)
-				return RedirectToAction("RegForm", "Home");
-			CookieManager.SaveLoginCookie(HttpContext, account.Username, accountId);
-			ViewBag.Username = account.Username;
+            var account = accountManager.GetAccount(id);
+            if (account == null)
+                return RedirectToAction("RegForm", "Home");
+            CookieManager.SaveLoginCookie(HttpContext, account.Username, id);
+            ViewBag.Username = account.Username;
 
-			IEnumerable<CabinetViewModel> list = countryManager.GetCountryById(account.CountryId).Accounts
-				.Select(a => new CabinetViewModel() { Username = a.Username, Sex = a.Sex });
-			return View(list);
-		}
+            IEnumerable<CabinetViewModel> list = countryManager.GetCountryById(account.CountryId)
+                .Accounts.Where(a => a.Id != id)
+                .Select(a => new CabinetViewModel() { Username = a.Username, Sex = a.Sex });
+            return View(list);
+        }
 
-		[HttpGet]
-		public ActionResult AccountLogout(string username)
-		{
-			CookieManager.DeleteCookie(HttpContext, username + CookieManager.LoginCookieValue);
-			return RedirectToAction("RegForm", "Home");
-		}
-		#endregion
-	}
+        [HttpGet]
+        public ActionResult AccountLogout(string username)
+        {
+            CookieManager.DeleteCookie(HttpContext, username + CookieManager.LoginCookieValue);
+            return RedirectToAction("RegForm", "Home");
+        }
+        #endregion
+    }
 }

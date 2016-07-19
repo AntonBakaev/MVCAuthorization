@@ -23,6 +23,19 @@ namespace MVCAuthorization.Controllers
 		#endregion
 
 		#region Private methods
+        private bool TryGetUsernameAndPassword(out string username, out string password)
+        {
+            if (Session["Username"] != null && Session["Password"] != null)
+            {
+                username = Session["Username"].ToString();
+                password = Session["Password"].ToString();
+                return true;
+            }
+            else if (CookieManager.TryReadAccountMainDataCookies(HttpContext, out username, out password))
+                return true;
+            return false;
+        }
+
 		private IEnumerable<SelectListItem> GetCountryNames()
 		{
 			IEnumerable<SelectListItem> names = countryManager.GetCountries()
@@ -51,7 +64,7 @@ namespace MVCAuthorization.Controllers
 		public ActionResult RegFormAdditional()
 		{
 			if (CookieManager.IsUserLoggedIn(Request))
-				return RedirectToAction("AccountLogin", "Account", new { accountId = CookieManager.GetLoggedUserId(Request) });
+				return RedirectToAction("AccountLogin", "Account", new { id = CookieManager.GetLoggedUserId(Request) });
 			return View(new AccountAdditionalViewModel() { CountryNames = GetCountryNames() });
 		}
 
@@ -59,15 +72,16 @@ namespace MVCAuthorization.Controllers
 		public ActionResult RegFormAdditional(AccountAdditionalViewModel accountMainData)
 		{
 			if (CookieManager.IsUserLoggedIn(Request))
-				return RedirectToAction("AccountLogin", "Account", new { accountId = CookieManager.GetLoggedUserId(Request) });
+				return RedirectToAction("AccountLogin", "Account", new { id = CookieManager.GetLoggedUserId(Request) });
 			if (!ModelState.IsValid)
 				return View(new AccountAdditionalViewModel() { CountryNames = GetCountryNames() });
-			string username;
-			string password;
-			if (!CookieManager.TryReadAccountMainDataCookies(this.HttpContext, out username, out password))
+
+            string username, password;
+            if (!TryGetUsernameAndPassword(out username, out password))
 				return RedirectToAction("RegForm", "Home");
 			int accountId = AddAccount(username, password, accountMainData.Sex, accountMainData.SelectedCountryId);
-			return RedirectToAction("AccountLogin", "Account", new { accountId = accountId });
+
+			return RedirectToAction("AccountLogin", "Account", new { id = accountId });
 		}
 		#endregion
 	}

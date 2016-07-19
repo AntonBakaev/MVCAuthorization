@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using MVCAuthorization.Utils;
 using MVCAuthorization.ViewModels;
 
@@ -6,8 +7,32 @@ namespace MVCAuthorization.Controllers
 {
 	public class HomeController : Controller
 	{
-		#region Action methods
-		[HttpGet]
+        #region Private methods
+        private void SaveCookies(AccountMainViewModel accountMainData)
+        {
+            CookieManager.SaveAccountMainDataCookies(this.HttpContext, accountMainData);
+        }
+
+        private void SaveSession(AccountMainViewModel accountMainData)
+        {
+            Session["Username"] = accountMainData.Username;
+            Session["Password"] = PasswordProtector.Protect(accountMainData.Username, accountMainData.Password);
+        }
+
+        private string GetSavedUsername()
+        {
+            string username, password;
+            if (Session["Username"] != null)
+                return Session["Username"].ToString();
+            else if (CookieManager.TryReadAccountMainDataCookies(this.HttpContext, out username, out password))
+                return username;
+            else
+                return String.Empty;
+        }
+        #endregion
+
+        #region Action methods
+        [HttpGet]
 		public ActionResult Index()
 		{
 			return RedirectToAction("RegForm");
@@ -17,25 +42,26 @@ namespace MVCAuthorization.Controllers
 		public ActionResult RegForm(bool? cookies)
 		{
 			if (CookieManager.IsUserLoggedIn(Request))
-				return RedirectToAction("AccountLogin", "Account", new { accountId = CookieManager.GetLoggedUserId(Request) });
-			if (cookies != true)
-				return View();
-			string username;
-			string password;
-			if (CookieManager.TryReadAccountMainDataCookies(this.HttpContext, out username, out password))
-				return View(new AccountMainViewModel() { Username = username, Password = password });
-			return View();
-		}
+				return RedirectToAction("AccountLogin", "Account", new { id = CookieManager.GetLoggedUserId(Request) });
+			if (cookies == true)				
+		        return View(new AccountMainViewModel() { Username = GetSavedUsername(), Password = String.Empty });
+            return View();
+        }
 
 		[HttpPost]
-		public ActionResult RegForm(AccountMainViewModel accountMainData)
+		public ActionResult RegForm(AccountMainViewModel accountMainData, string Next, string Next2)
 		{
 			if (CookieManager.IsUserLoggedIn(Request))
-				return RedirectToAction("AccountLogin", "Account", new { accountId = CookieManager.GetLoggedUserId(Request) });
+				return RedirectToAction("AccountLogin", "Account", new { id = CookieManager.GetLoggedUserId(Request) });
 			if (!ModelState.IsValid)
 				return View();
-			CookieManager.SaveAccountMainDataCookies(this.HttpContext, accountMainData);
-			return RedirectToAction("RegFormAdditional", "Registration");
+
+            if (Next != null)
+                SaveCookies(accountMainData);
+            else if (Next2 != null)
+                SaveSession(accountMainData);
+
+            return RedirectToAction("RegFormAdditional", "Registration");
 		}
 		#endregion
 	}
