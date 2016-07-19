@@ -25,10 +25,16 @@ namespace MVCAuthorization.Controllers
 		#region Private methods
         private bool TryGetUsernameAndPassword(out string username, out string password)
         {
-            if (Session["Username"] != null && Session["Password"] != null)
+            if (TempData["Username"] != null && TempData["Password"] != null)
+            {
+                username = TempData["Username"].ToString();
+                password = PasswordProtector.Unprotect(username, TempData["Password"].ToString());
+                return true;
+            }
+            else if (Session["Username"] != null && Session["Password"] != null)
             {
                 username = Session["Username"].ToString();
-                password = Session["Password"].ToString();
+                password = PasswordProtector.Unprotect(username, Session["Password"].ToString());
                 return true;
             }
             else if (CookieManager.TryReadAccountMainDataCookies(HttpContext, out username, out password))

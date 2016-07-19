@@ -19,10 +19,18 @@ namespace MVCAuthorization.Controllers
             Session["Password"] = PasswordProtector.Protect(accountMainData.Username, accountMainData.Password);
         }
 
+        private void SaveTempData(AccountMainViewModel accountMainData)
+        {
+            TempData["Username"] = accountMainData.Username;
+            TempData["Password"] = PasswordProtector.Protect(accountMainData.Username, accountMainData.Password);
+        }
+
         private string GetSavedUsername()
         {
             string username, password;
-            if (Session["Username"] != null)
+            if (TempData["Username"] != null)
+                return TempData["Username"].ToString();
+            else if (Session["Username"] != null)
                 return Session["Username"].ToString();
             else if (CookieManager.TryReadAccountMainDataCookies(this.HttpContext, out username, out password))
                 return username;
@@ -49,7 +57,7 @@ namespace MVCAuthorization.Controllers
         }
 
 		[HttpPost]
-		public ActionResult RegForm(AccountMainViewModel accountMainData, string Next, string Next2)
+		public ActionResult RegForm(AccountMainViewModel accountMainData, string Next, string Next2, string Next3)
 		{
 			if (CookieManager.IsUserLoggedIn(Request))
 				return RedirectToAction("AccountLogin", "Account", new { id = CookieManager.GetLoggedUserId(Request) });
@@ -60,6 +68,8 @@ namespace MVCAuthorization.Controllers
                 SaveCookies(accountMainData);
             else if (Next2 != null)
                 SaveSession(accountMainData);
+            else if (Next3 != null)
+                SaveTempData(accountMainData);
 
             return RedirectToAction("RegFormAdditional", "Registration");
 		}
