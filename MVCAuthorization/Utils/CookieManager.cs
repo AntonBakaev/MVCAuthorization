@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web;
 using MVCAuthorization.Models;
 
@@ -6,10 +7,20 @@ namespace MVCAuthorization.Utils
 {
 	public static class CookieManager
 	{
-        public static bool IsUserLoggedIn(this System.Web.Mvc.HtmlHelper html, HttpRequestBase httpRequest, string username)
-        {
-            return httpRequest.Cookies[username] != null;
-        }
+		public const string LoginCookieValue = "_UserLoggedIn";
+
+		public static bool IsUserLoggedIn(HttpRequestBase request)
+		{
+			return request.Cookies.AllKeys.Any(cookieName => cookieName.Contains(LoginCookieValue));
+		}
+
+		public static int GetLoggedUserId(HttpRequestBase request)
+		{
+			foreach (var cookieName in request.Cookies.AllKeys
+				.Where(cookieName => cookieName.Contains(LoginCookieValue)))
+				return Convert.ToInt32(request.Cookies[cookieName].Value);
+			return -1;
+		}
 
 		public static void DeleteCookie(HttpContextBase httpContext, string cookieName)
 		{
@@ -41,9 +52,9 @@ namespace MVCAuthorization.Utils
 			return true;
 		}
 
-        public static void SaveLoginCookie(HttpContextBase httpContext, string username)
-        {
-            httpContext.Response.Cookies.Add(new HttpCookie(username));
-        }
+		public static void SaveLoginCookie(HttpContextBase httpContext, string username, int accountId)
+		{
+			httpContext.Response.Cookies.Add(new HttpCookie(username + LoginCookieValue, accountId.ToString()));
+		}
 	}
 }
