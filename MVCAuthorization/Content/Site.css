@@ -1,70 +1,67 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+	padding-top: 50px;
+	padding-bottom: 20px;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
 */
 .dl-horizontal dt {
-    white-space: normal;
+	white-space: normal;
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
 textarea {
-    max-width: 280px;
+	max-width: 280px;
 }
 
 input {
-    margin-top: 12px;
-}
-
-.input-text {
-    margin-left: 60px;
+	margin-top: 12px;
 }
 
 .div-checkbox {
-    margin-left: 174px;
+	margin-left: 174px;
 }
 
 .countries-list {
-    margin-left: 20px;
+	margin-left: 20px;
 }
 
 .disabled-link {
-    text-align: right;
-    cursor: default;
-    color: #777777;
-    pointer-events: none;
+	text-align: right;
+	cursor: default;
+	color: #777777;
+	pointer-events: none;
 }
 
-.account-data-div {
-	float: left;
+.account-data {
+	margin-right: 20px;
+	width: 100%;
 }
 
 /* Set styles for fields that have NOT passed the validation */
 .field-validation-error {
-    color: #F00;
-    margin-left: 10px;
+	color: #F00;
+	margin-left: 10px;
 }
 
 .input-validation-error {
-    border: 1px solid #F00;
+	border: 1px solid #F00;
 }
 
 /* Set styles for fields that have passed the validation */
 .field-validation-valid {
-    display: none;
+	display: none;
 }
 
 .validation-summary-valid {
-    display: none;
+	display: none;
 }

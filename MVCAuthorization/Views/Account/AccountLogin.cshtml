@@ -1,7 +1,21 @@
-﻿@{
+﻿@model IEnumerable<MVCAuthorization.ViewModels.CabinetViewModel>
+@{
 	ViewBag.Title = "Cabinet";
 }
 
 <div>
-
+	<h3>Users from your country:</h3>
+	<div class="table">
+		<div class="row">
+			<div class="col-md-2"><h4>Username</h4></div>
+			<div class="col-md-2"><h4>Sex</h4></div>
+		</div>
+		@foreach (var account in Model)
+		{
+			<div class="row">
+				<div class="col-md-2">@account.Username</div>
+				<div class="col-md-2">@account.Sex</div>
+			</div>
+		}
+	</div>
 </div>

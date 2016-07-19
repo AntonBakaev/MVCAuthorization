@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace MVCAuthorization.Models
+namespace MVCAuthorization.ViewModels
 {
 	public class AccountAdditionalViewModel
 	{

@@ -1,4 +1,4 @@
-﻿@model MVCAuthorization.Models.AccountMainViewModel
+﻿@model MVCAuthorization.ViewModels.AccountMainViewModel
 @{
 	ViewBag.Title = "Registration form";
 }
@@ -8,12 +8,16 @@
 	{
 		<fieldset>
 			@Html.Label("Enter username:")
-			@Html.TextBoxFor(a => a.Username, new { @class = "input-text" })
+			@Html.TextBoxFor(a => a.Username, new { style = "margin-left: 60px;" })
 			@Html.ValidationMessageFor(a => a.Username)
 			<br />
 			@Html.Label("Enter password:")
-			@Html.PasswordFor(a => a.Password, new { @class = "input-text" })
+			@Html.PasswordFor(a => a.Password, new { style = "margin-left: 60px;" })
 			@Html.ValidationMessageFor(a => a.Password)
+			<br />
+			@Html.Label("Confirm password:")
+			@Html.PasswordFor(a => a.ConfirmPassword, new { style = "margin-left: 42px;" })
+			@Html.ValidationMessageFor(a => a.ConfirmPassword)
 			<br />
 			<input id="next" name="next" type="submit" value="Next" />
 		</fieldset>

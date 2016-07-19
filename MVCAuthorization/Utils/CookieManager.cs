@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
-using MVCAuthorization.Models;
+using MVCAuthorization.ViewModels;
 
 namespace MVCAuthorization.Utils
 {

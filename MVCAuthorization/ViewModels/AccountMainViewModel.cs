@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MVCAuthorization.Models
+namespace MVCAuthorization.ViewModels
 {
     public class AccountMainViewModel
     {
@@ -18,5 +18,8 @@ namespace MVCAuthorization.Models
         [RegularExpression(@"^(?=.*\d)(?=.*[A-Z]).*",
             ErrorMessage = "Password must contain at least one uppercase letter and one digit.")]
         public string Password { get; set; }
+
+		[Compare("Password", ErrorMessage = "Passwords don't match")]
+		public string ConfirmPassword { get; set; }
     }
 }

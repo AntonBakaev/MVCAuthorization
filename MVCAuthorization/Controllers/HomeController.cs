@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
-using MVCAuthorization.Models;
 using MVCAuthorization.Utils;
+using MVCAuthorization.ViewModels;
 
 namespace MVCAuthorization.Controllers
 {

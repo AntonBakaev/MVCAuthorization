@@ -191,8 +191,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountAdditionalViewModel.cs" />
-    <Compile Include="Models\AccountMainViewModel.cs" />
+    <Compile Include="ViewModels\AccountAdditionalViewModel.cs" />
+    <Compile Include="ViewModels\AccountMainViewModel.cs" />
     <Compile Include="Models\AccountManager.cs" />
     <Compile Include="Models\CountryManager.cs" />
     <Compile Include="Models\DataAccessLevel\Account.Context.cs">
@@ -222,6 +222,7 @@
     <Compile Include="Utils\CookieManager.cs" />
     <Compile Include="Utils\PasswordProtector.cs" />
     <Compile Include="Utils\SHA1Encoder.cs" />
+    <Compile Include="ViewModels\CabinetViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\AccountsDB.mdf" />
